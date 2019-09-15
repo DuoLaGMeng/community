@@ -26,38 +26,25 @@ public class ProfileController {
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable("action") String action,
                           HttpServletRequest request,
-                          @RequestParam(name = "page",defaultValue = "1") Integer page,
-                          @RequestParam(name = "size",defaultValue = "5") Integer size,
-                          Model model){
-        User user = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
-        if(user == null){
-            model.addAttribute("error","用户未登录，请先登录！");
+                          @RequestParam(name = "page", defaultValue = "1") Integer page,
+                          @RequestParam(name = "size", defaultValue = "5") Integer size,
+                          Model model) {
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            model.addAttribute("error", "用户未登录，请先登录！");
             return "redirect:/";
         }
 
-        if("question".equals(action)){
-            model.addAttribute("section","question");
-            model.addAttribute("sectionName","我的提问");
-        }else if("replies".equals(action)){
-            model.addAttribute("section","replies");
-            model.addAttribute("sectionName","最新回复");
+        if ("question".equals(action)) {
+            model.addAttribute("section", "question");
+            model.addAttribute("sectionName", "我的提问");
+        } else if ("replies".equals(action)) {
+            model.addAttribute("section", "replies");
+            model.addAttribute("sectionName", "最新回复");
         }
 
         PageDTO pageDTO = questionService.list(user.getId(), page, size);
-        model.addAttribute("pagination",pageDTO);
+        model.addAttribute("pagination", pageDTO);
         return "profile";
     }
 }
