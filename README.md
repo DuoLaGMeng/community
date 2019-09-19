@@ -24,3 +24,8 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 ```
+
+##语句
+```bash
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+```

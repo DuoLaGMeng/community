@@ -31,20 +31,19 @@ public class ProfileController {
                           Model model) {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
-            model.addAttribute("error", "用户未登录，请先登录！");
             return "redirect:/";
         }
-
-        if ("question".equals(action)) {
+        if ("questions".equals(action)) {
             model.addAttribute("section", "question");
             model.addAttribute("sectionName", "我的提问");
+            PageDTO pageDTO = questionService.list(user.getId(), page, size);
+            model.addAttribute("pagination", pageDTO);
         } else if ("replies".equals(action)) {
+            PageDTO pageDTO = questionService.list(user.getId(), page, size);
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
+            model.addAttribute("pagination", pageDTO);
         }
-
-        PageDTO pageDTO = questionService.list(user.getId(), page, size);
-        model.addAttribute("pagination", pageDTO);
         return "profile";
     }
 }
