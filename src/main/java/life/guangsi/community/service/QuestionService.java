@@ -2,6 +2,8 @@ package life.guangsi.community.service;
 
 import life.guangsi.community.dto.PageDTO;
 import life.guangsi.community.dto.QuestionDTO;
+//import life.guangsi.community.exception.CustomizeErrorCode;
+//import life.guangsi.community.exception.CustomizeException;
 import life.guangsi.community.exception.CustomizeErrorCode;
 import life.guangsi.community.exception.CustomizeException;
 import life.guangsi.community.mapper.QuestionExtMapper;
@@ -14,7 +16,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class QuestionService {
         return pageDTO;
     }
 
-    public PageDTO list(Integer userId, Integer page, Integer size) {
+    public PageDTO list(Long userId, Integer page, Integer size) {
         Integer totalPage;
         PageDTO pageDTO = new PageDTO();
         QuestionExample example = new QuestionExample();
@@ -108,7 +109,7 @@ public class QuestionService {
         return pageDTO;
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         QuestionDTO questionDTO = new QuestionDTO();
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question == null){
@@ -117,6 +118,7 @@ public class QuestionService {
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         BeanUtils.copyProperties(question, questionDTO);
         questionDTO.setUser(user);
+
         return questionDTO;
     }
 
@@ -124,6 +126,9 @@ public class QuestionService {
         if (question.getId() == null) {
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
             questionMapper.insert(question);
         } else {
             question.setGmtModified(question.getGmtCreate());
@@ -141,7 +146,7 @@ public class QuestionService {
         }
     }
 
-    public void incView(Integer id) {
+    public void incView(Long id) {
         Question question = new Question();
         question.setId(id);
         question.setViewCount(1);

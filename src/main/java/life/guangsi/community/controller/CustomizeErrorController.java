@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Map;
 
-//@Controller("/error")
-//@RequestMapping("${server.error.path:${error.path:/error}}")
+@Controller("/error")
+@RequestMapping("${server.error.path:${error.path:/error}}")
 public class CustomizeErrorController implements ErrorController {
     @Override
     public String getErrorPath() {
