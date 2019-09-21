@@ -1,9 +1,9 @@
 package life.guangsi.community.controller;
 
 
-import life.guangsi.community.dto.CommentCreateDTO;
 import life.guangsi.community.dto.CommentDTO;
 import life.guangsi.community.dto.QuestionDTO;
+import life.guangsi.community.enums.CommentTypeEnum;
 import life.guangsi.community.service.CommentService;
 import life.guangsi.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class QuestionController {
     public String question(@PathVariable("id") Long id,
                            Model model) {
         QuestionDTO questionDTO = questionService.getById(id);
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
         questionService.incView(id);
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", comments);
