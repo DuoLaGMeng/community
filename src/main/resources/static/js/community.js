@@ -76,6 +76,25 @@ function collapseComments(e) {
 
     }
 }
+//标签选择
+function selectTag(e) {
+    var value = e.getAttribute("data-tag");
+    var previous = $("#tag").val();
+    if(previous.indexOf(value) == -1){
+        if(previous){
+            $("#tag").val(previous + ',' + value);
+        }else{
+            $("#tag").val(value);
+        }
+    }
+
+}
+
+//弹出标签选择栏
+function showSelectTag() {
+    $("#select-tag").show();
+}
+
 
 //评论模板
 function comment2target(targetId, type, content) {
