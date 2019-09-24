@@ -3,6 +3,7 @@ package life.guangsi.community.interceptor;
 import life.guangsi.community.mapper.UserMapper;
 import life.guangsi.community.model.User;
 import life.guangsi.community.model.UserExample;
+import life.guangsi.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
@@ -34,6 +38,8 @@ public class SessionInterceptor implements HandlerInterceptor {
                     List<User> userList = userMapper.selectByExample(userExample);
                     if (userList.size() != 0) {
                         request.getSession().setAttribute("user", userList.get(0));
+                        Long unreadCount = notificationService.unreadCount(userList.get(0).getId());
+                        request.getSession().setAttribute("unreadCount", unreadCount);
                     }
                     break;
                 }

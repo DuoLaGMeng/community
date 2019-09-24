@@ -68,7 +68,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
-        pageDTO.setQuestionDTOS(questionDTOS);
+        pageDTO.setData(questionDTOS);
 
         return pageDTO;
     }
@@ -109,7 +109,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
-        pageDTO.setQuestionDTOS(questionDTOS);
+        pageDTO.setData(questionDTOS);
 
         return pageDTO;
     }

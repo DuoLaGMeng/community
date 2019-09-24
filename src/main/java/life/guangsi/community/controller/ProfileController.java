@@ -3,6 +3,7 @@ package life.guangsi.community.controller;
 import life.guangsi.community.dto.PageDTO;
 import life.guangsi.community.mapper.UserMapper;
 import life.guangsi.community.model.User;
+import life.guangsi.community.service.NotificationService;
 import life.guangsi.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 public class ProfileController {
 
     @Autowired
-    private UserMapper userMapper;
+    private QuestionService questionService;
 
     @Autowired
-    private QuestionService questionService;
+    private NotificationService notificationService;
 
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable("action") String action,
@@ -34,14 +35,16 @@ public class ProfileController {
             return "redirect:/";
         }
         if ("questions".equals(action)) {
-            model.addAttribute("section", "question");
+            model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
             PageDTO pageDTO = questionService.list(user.getId(), page, size);
             model.addAttribute("pagination", pageDTO);
         } else if ("replies".equals(action)) {
-            PageDTO pageDTO = questionService.list(user.getId(), page, size);
+            PageDTO pageDTO = notificationService.list(user.getId(), page, size);
+            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
+
             model.addAttribute("pagination", pageDTO);
         }
         return "profile";
