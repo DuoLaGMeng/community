@@ -7,10 +7,14 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/bootstrap-theme.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/community.css}"/>
+    <link rel="stylesheet" th:href="@{/css/editormd.preview.min.css}"/>
     <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}" type="application/javascript"></script>
     <script th:src="@{/js/moment.js}" type="application/javascript"></script>
     <script th:src="@{/js/community.js}" type="application/javascript"></script>
+    <script th:src="@{/js/editormd.min.js}" type="application/javascript"></script>
+    <script th:src="@{/js/lib/marked.min.js}"></script>
+    <script th:src="@{/js/lib/prettify.min.js}"></script>
 </head>
 <body>
 <div th:insert="~{nav :: nav_pub}"></div>
@@ -29,7 +33,15 @@
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12"/>
 
                 <!--内容-->
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.description}"></div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view">
+                    <textarea style="display: none;" th:text="${question.description}"></textarea>
+                </div>
+                <script type="text/javascript">
+                    $(function() {
+                        var testView = editormd.markdownToHTML("question-view", {
+                        });
+                    });
+                </script>
 
                 <!--标签-->
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12"/>
@@ -105,12 +117,12 @@
                     <div class="media">
                         <div class="media-left">
                             <a href="#">
-                                <img class="media-object img-rounded media-img" th:src="${question.user.avatarUrl}">
+                                <img class="media-object img-rounded media-img" th:src="${session.user != null ?session.user.avatarUrl : '/images/default-avatar.png'}">
                             </a>
                         </div>
                         <div class="media-body">
                             <h5 class="media-heading">
-                                <span th:text="${question.user.name}"></span>
+                                <span th:text="${session.user != null ?session.user.name : '匿名用户'}"></span>
                             </h5>
                         </div>
                     </div>
@@ -140,7 +152,7 @@
             <!--公众号-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>站长微信</h4>
-                <img class="img-thumbnail question-wechat" th:src="@{/img/wechat.jpg}">
+                <img class="img-thumbnail question-wechat" th:src="@{/images/wechat.jpg}">
             </div>
 
             <!--相关问题-->
@@ -156,5 +168,6 @@
         </div>
     </div>
 </div>
+<div th:insert="~{footer :: foot}"></div>
 </body>
 </html>
