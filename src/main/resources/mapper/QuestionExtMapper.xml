@@ -33,8 +33,11 @@
             resultType="java.lang.Integer">
         select count(*) from question
         <where>
-            <if test="search != null">
+            <if test="search != null and search != ''">
                 and title REGEXP #{search}
+            </if>
+            <if test="tag != null and tag != ''">
+                and tag REGEXP #{tag}
             </if>
         </where>
     </select>
@@ -42,8 +45,11 @@
             resultMap="BaseResultMap">
         select * from question
         <where>
-            <if test="search != null">
+            <if test="search != null and search != ''">
                 and title REGEXP #{search}
+            </if>
+            <if test="tag != null and tag != ''">
+                and tag REGEXP #{tag}
             </if>
         </where>
         order by gmt_create DESC limit #{page},#{size}

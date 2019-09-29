@@ -36,16 +36,22 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public PageDTO list(String search, Integer page, Integer size) {
-        if (!StringUtils.isBlank(search)) {
+    public PageDTO list(String search, String tag, Integer page, Integer size) {
+        if (StringUtils.isNotBlank(search)) {
             String[] tags = StringUtils.split(search, " ");
-            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+            search = Arrays
+                    .stream(tags)
+                    .filter(StringUtils::isNotBlank)
+                    .map(t -> t.replace("+", "").replace("*", "").replace("?", ""))
+                    .filter(StringUtils::isNotBlank)
+                    .collect(Collectors.joining("|"));
         }
 
         Integer totalPage;
         PageDTO pageDTO = new PageDTO();
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         questionQueryDTO.setSearch(search);
+        questionQueryDTO.setTag(tag);
         Integer totalcount = questionExtMapper.countBySearch(questionQueryDTO);
 
         if (totalcount % size == 0) {
